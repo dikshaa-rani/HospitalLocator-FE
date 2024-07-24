@@ -96,6 +96,15 @@ const LocateNearestHospitalMyLoc = () => {
   //Write a function, which receives latitude and longitude of a place as params, and set the response using setAddress() setter function. Hint: You may use 3rd Party API geocode.maps.co in this function
   function FindAddress(latitude, longitude) {
     //complete the function
+    fetch(
+      `https://geocode.maps.co/reverse?lat=${latitude}&lon=${longitude}&api_key=${GEOCODE_API_KEY}`
+    )
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setAddress(data);
+      });
   }
 
   function displayResults() {
@@ -119,9 +128,26 @@ const LocateNearestHospitalMyLoc = () => {
     if (hospitalData) hospitalDataList = JSON.parse(hospitalData);
     let latNearestHospital = 0;
     let longNearestHospital = 0;
-
+    console.log(hospitalDataList)
     //TODO
     //Iterate over hospitalDataList and find the nearest hospital to the given Latitude and Longitude
+    for (let i = 0; i < hospitalDataList?.length; i++) {
+      let dist = getDistanceFromLatLonInKm(
+        Latitude,
+        Longitude,
+        hospitalDataList[i]["Latitude"],
+        hospitalDataList[i]["Longitude"]
+      );
+      if (
+        (minDist === 0 || dist < minDist) &&
+        hospitalDataList[i].SpecialitiesAvailable.includes(dept)
+      ) {
+        minDist = dist;
+        nearestHospitalName = hospitalDataList[i]["Name"];
+        latNearestHospital = hospitalDataList[i]["Latitude"];
+        longNearestHospital = hospitalDataList[i]["Longitude"];
+      }
+    }
     setNearestHospital(nearestHospitalName);
     FindAddress(latNearestHospital, longNearestHospital);
     setDistanceHospital(minDist);
@@ -146,7 +172,9 @@ const LocateNearestHospitalMyLoc = () => {
 
   //TODO
   //execute getHospitalDatafromDB() when the page loads for first time
-  
+  useEffect(() => {
+    getHospitalDatafromDB();
+  }, []);
 
   useEffect(() => {
     if (textToSearch == null || textToSearch.length == 0) setSearchList([]);

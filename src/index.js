@@ -4,9 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-export const GEOCODE_API_KEY="668f77953c443921364690nrf6d0eb9";
+export const GEOCODE_API_KEY="66a0d45b2d79d665765569nghc59deb";
 //enter your key from geocode here
-export const FUNCTION_APP_URL="http://localhost:7071/api/getHospitalsList";
+export const FUNCTION_APP_URL="https://fa-cloud-user-temp.azurewebsites.net/api/getHospitalsList?code=+";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
